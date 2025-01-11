@@ -1,0 +1,13 @@
+/*InvalidInputException Class
+*
+* This class is a custom Exception under the big subclass throwable.
+* It is thrown in Main when the user does not input the desired choice between 1-7
+*
+* Anu Yalla
+* 11/27/2023
+ */
+package EncryptionDecryption;
+
+public class InvalidInputException extends Exception{
+
+}
