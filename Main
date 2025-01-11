@@ -1,0 +1,125 @@
+/*Main/Driver Class
+*
+* This class should reads information from the console using the Scanner. 
+* It asks the User to choose option from 1-7 through the chooseOption() method.
+* I have coded this to work for only 1 word messages as of now
+*
+* Anu Yalla
+* 11/27/2023
+ */
+package EncryptionDecryption;
+import java.io.*;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class Main {
+	static String choice = "";
+	static int choiceNum = 0;
+	static Scanner scan = new Scanner(System.in);
+	static File textFile = new File("YallaTextFileProject_3.txt");
+	
+	public static void main(String[] args) {
+		//This while loop makes it so the chooseOption method is called whenever an option other
+		//than 7 is chosen
+		CreateFile.CheckNewFile();
+		while(choiceNum != 7) {
+			chooseOption();
+			System.out.println("\r\n");
+		}	
+		scan.close();
+	}
+
+	public static void chooseOption() {
+		String choice = "";
+		System.out.println("Which would you like to do now? (type 1 - 7) \n"
+				// decrypt without saving
+				+ "1) Enter an encrypted message and display the unencrypted form without saving \n"
+				+ "2) Retrieve and decrypt your last message \n"
+				+ "3) Retrieve your last message in encrypted form \n"
+				// encrypt without saving
+				+ "4) Enter an unencrypted message and display the encrypted form without saving \n"
+				// save the same thing
+				+ "5) Enter an unencrypted message and save the unencrypted version \n"
+				// encrypt then save
+				+ "6) Enter an unencrypted message and save the encrypted version \n"
+				+ "7) Quit \n");
+		try {
+			choice = scan.next();
+			choiceNum = Integer.parseInt(choice);
+			//If the users selected choice is not between 1-7 then throw the custom exception
+			if (choiceNum < 1 || choiceNum > 7) {
+				throw new InvalidInputException();
+			}else {
+				//If the users selected choice is between 1-7 then call chooseEncryptOrDecrypt function
+				chooseEncryptOrDecrypt(choiceNum);
+			}
+		} catch (InputMismatchException e) {
+			System.out.println("you didnt inupt a number");
+		} catch (InvalidInputException e) {
+			System.out.println("you didnt type a proper value. Try again");
+		}
+		choice = "";
+	}
+	
+	public static void chooseEncryptOrDecrypt(int choiceNum) {
+		// switch case depending on what option the user chooses and call the required functions
+		String sEncryptDecryptCode = "";
+		switch (choiceNum) {
+		case 1:
+			System.out.println("You chose option number 1.");
+			System.out.println("The Decrypted form: " + Decrypt.Decrypting(askForMessage()));
+			break;
+		case 2:
+			System.out.println("You chose option number 2.");
+			sEncryptDecryptCode = Decrypt.readEncryptDecryptCode();
+			if(sEncryptDecryptCode.equalsIgnoreCase("D")) {
+				System.out.println("The Last Decrypted form: " + Decrypt.readMessage());
+			}else {
+				System.out.println("The Last Decrypted form: " + Decrypt.Decrypting(Decrypt.readMessage()));
+			}
+			break;
+		case 3:
+			System.out.println("You chose option number 3.");
+			sEncryptDecryptCode = Decrypt.readEncryptDecryptCode();
+			if(sEncryptDecryptCode.equalsIgnoreCase("E")) {
+				System.out.println("The Last Encrypted form: " + Decrypt.readMessage());
+			}else {
+				System.out.println("The Last Encrypted form: " + Encrypt.Encrypting(Decrypt.readMessage()));
+			}
+			break;
+		case 4:
+			System.out.println("You chose option number 4.");
+			System.out.println("Encrypted Form: " + Encrypt.Encrypting(askForMessage()));
+			break;
+		case 5:
+			System.out.println("You chose option number 5.");
+			Encrypt.saveMessage(askForMessage(),"D");
+			break;
+		case 6:
+			System.out.println("You chose option number 6.");
+			//messageToSave is just a placeholder variable here 
+			String messageToSave = Encrypt.Encrypting(askForMessage());
+			System.out.println("Encrypted Message : " + messageToSave);
+			Encrypt.saveMessage(messageToSave, "E");
+			break;
+		case 7:
+			System.out.println("You option number 7. That means that you have chosen to quit.\n"
+					+ "Your prevoius messages will remain saved once you restart the program.");
+			break;
+		default:
+			System.out.println("You did not choose an appropriate option!");
+			break;
+		}
+	}
+	
+	public static String askForMessage() {
+		String userInput = "";// initialize String
+		System.out.println("Enter the appropriate Input message: ");// ask user to enter a string
+		//scan.useDelimiter("\n");
+		userInput = scan.next() + scan.nextLine();// read and store user input
+		return userInput;//returns the userInput that was scanned 
+	}
+/*I had originally put this saveMessage method and readMessage function in main but changed it after 
+ * looking at the instructions another time.
+ */ 
+}
