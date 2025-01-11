@@ -1,0 +1,58 @@
+/*Decrypt Class
+*
+* Handles all of the decryption functions of the program
+* and all of the file reading portions of the program. 
+*
+* Anu Yalla
+* 11/27/2023
+ */
+package EncryptionDecryption;
+import java.io.*;
+
+public class Decrypt {
+	//Decrypts using a for-loop to take the first char and every next third char and
+	//and put it into the output String to return whenever this Decrypting function is called
+	public static String Decrypting(String Input) {
+		String Output = "";
+		for (int i = 0; i < Input.length(); i += 3) {
+			Output += Input.charAt(i);
+		}
+		return Output;
+	}
+	/* Options involving reading have a EncryptDecryptCode to know what procedure to take depending on
+	 * the option. Either to decrypt or encrypt the last saved message, that is what 
+	 * readEncryptDecryptCode() function handles. It returns a String saying either to 
+	 * decrypt or encrypt the message that will be read from the text file.
+	 */
+	public static String readEncryptDecryptCode() {
+		String EncryptDecryptCode = "" ;
+		try {
+			//set up the FileWriter and BufferedWriter
+			FileReader fr = new FileReader(Main.textFile);
+			BufferedReader br = new BufferedReader(fr);
+			EncryptDecryptCode = br.readLine();//Will be Y or N
+			System.out.println("Encrypt - Decrypt Code " + EncryptDecryptCode);
+			br.close();
+		} catch (IOException e) {
+			System.out.println("Oops! There is no file");
+		}
+		return EncryptDecryptCode;
+	}
+	/* The readMessage function is to be called in the switch case chooseEncryptOrDecrypt function.
+	 * This function will read 2 lines from the text file the first is to see if the message is in
+	 * encrypted form already or not. The second is to read the actual message String and return it.
+	 */
+	public static String readMessage() {
+		String lastMessage = "There is no last message saved ";
+		try {
+			FileReader fr = new FileReader(Main.textFile);
+			BufferedReader br = new BufferedReader(fr);
+			String EncryptedAlready = br.readLine();//Will be Y or N
+			lastMessage = br.readLine();
+			br.close();
+		} catch (IOException e) {
+			System.out.println("Oops! There is no file");
+		}
+		return lastMessage;
+	}
+}
